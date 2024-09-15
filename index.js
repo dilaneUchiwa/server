@@ -26,7 +26,6 @@ app.post('/', async (req, res) => {
         console.log(response)
         res.json(response);
         // Authorizing transactions
-
         // For PIN transactions
         if (response.meta.authorization.mode === 'pin') {
             let payload2 = req.body
