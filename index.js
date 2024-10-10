@@ -14,10 +14,13 @@ const bodyParser = require('body-parser');
 const formData = require('form-data');
 const twilio = require('twilio');
 const { Vonage } = require('@vonage/server-sdk');
+const Stripe = require('stripe');
 
 //////////////////////////// FLUTTERWAVE ///////////////////////////////////////////////////
 app.post('/', async (req, res) => {
-    if (!req.body.apiKey || !req.body.secretKey) {
+    const apiKey = req.headers['x-api-key'];
+    const secretKey = req.headers['x-secret-key'];
+    if (!apiKey || !secretKey) {
         return res.status(400).json({ error: 'Flutterwave API key and secret key are required' });
     }
     const flw = new Flutterwave(apiKey, secretKey);
@@ -45,10 +48,11 @@ app.post('/', async (req, res) => {
 });
 
 app.post('/otp', async (req, res) => {
-    if (!req.body.apiKey || !req.body.secretKey) {
+    const apiKey = req.headers['x-api-key'];
+    const secretKey = req.headers['x-secret-key'];
+    if (!apiKey || !secretKey) {
         return res.status(400).json({ error: 'Flutterwave API key and secret key are required' });
     }
-
     const flw = new Flutterwave(apiKey, secretKey);
     try {
         const callValidate = await flw.Charge.validate(req.body)
@@ -61,7 +65,9 @@ app.post('/otp', async (req, res) => {
 });
 
 app.post('/verify-transaction', async (req, res) => {
-    if (!req.body.apiKey || !req.body.secretKey) {
+    const apiKey = req.headers['x-api-key'];
+    const secretKey = req.headers['x-secret-key'];
+    if (!apiKey || !secretKey) {
         return res.status(400).json({ error: 'Flutterwave API key and secret key are required' });
     }
     const flw = new Flutterwave(apiKey, secretKey);
@@ -76,7 +82,9 @@ app.post('/verify-transaction', async (req, res) => {
 });
 
 app.post('/verify-transaction-queue', async (req, res) => {
-    if (!req.body.apiKey || !req.body.secretKey) {
+    const apiKey = req.headers['x-api-key'];
+    const secretKey = req.headers['x-secret-key'];
+    if (!apiKey || !secretKey) {
         return res.status(400).json({ error: 'Flutterwave API key and secret key are required' });
     }
 
@@ -92,10 +100,11 @@ app.post('/verify-transaction-queue', async (req, res) => {
 });
 
 app.post('/token', async (req, res) => {
-    if (!req.body.apiKey || !req.body.secretKey) {
+    const apiKey = req.headers['x-api-key'];
+    const secretKey = req.headers['x-secret-key'];
+    if (!apiKey || !secretKey) {
         return res.status(400).json({ error: 'Flutterwave API key and secret key are required' });
     }
-
     const flw = new Flutterwave(apiKey, secretKey);
     try {
         const token = await flw.Tokenized.charge(req.body);
@@ -109,6 +118,9 @@ app.post('/token', async (req, res) => {
 
 ///////////////////////// STRIPE //////////////////////////////////////////
 app.post('/create-payment-intent', async (req, res) => {
+    const apiKey = req.headers['x-api-key'];
+    const secretKey = req.headers['x-secret-key'];
+    console.log(apiKey);
     const {
         email,
         items,
@@ -117,7 +129,7 @@ app.post('/create-payment-intent', async (req, res) => {
         payment_method_types = [],
         client = 'ios',
     } = req.body;
-    const stripe = new Stripe(req.body.apiKey, {
+    const stripe = new Stripe(apiKey, {
         apiVersion: '2023-08-16',
         typescript: true,
     });
@@ -155,7 +167,9 @@ app.post('/create-payment-intent', async (req, res) => {
 });
 
 app.post('/payment-sheet', async (_, res) => {
-    const stripe = new Stripe(_.body.apiKey, {
+    const apiKey = req.headers['x-api-key'];
+    const secretKey = req.headers['x-secret-key'];
+    const stripe = new Stripe(apiKey, {
         apiVersion: '2023-08-16',
         typescript: true,
     });
