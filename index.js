@@ -167,8 +167,8 @@ app.post('/create-payment-intent', async (req, res) => {
 });
 
 app.post('/payment-sheet', async (_, res) => {
-    const apiKey = req.headers['x-api-key'];
-    const secretKey = req.headers['x-secret-key'];
+    const apiKey = _.headers['x-api-key'];
+    const secretKey = _.headers['x-secret-key'];
     const stripe = new Stripe(apiKey, {
         apiVersion: '2023-08-16',
         typescript: true,
